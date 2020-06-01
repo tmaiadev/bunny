@@ -13,6 +13,12 @@ class Game {
 		this.setup();
 	}
 
+	get obstacles() {
+		const os = [];
+		this.lanes.forEach((l) => l.trees.forEach((t) => os.push(t)));
+		return os;
+	}
+
 	genLane(index) {
 		return new Lane(this, index);
 	}
@@ -110,7 +116,10 @@ class Game {
 	render() {
 		this.ctx.clearRect(0, 0, this.screenWidth, this.screenHeight);
 
-		this.lanes.forEach((lane) => this.camera.render(this.ctx, lane));
+		this.lanes.forEach((lane) => {
+			this.camera.render(this.ctx, lane);
+			lane.trees.forEach((tree) => this.camera.render(this.ctx, tree));
+		});
 		this.camera.render(this.ctx, this.player);
 		this.lanes.forEach((lane) => lane.vehicles.forEach((v) => this.camera.render(this.ctx, v)));
 

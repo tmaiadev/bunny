@@ -10,10 +10,16 @@ class Lane {
 		this.type = this._type(index);
 		this.color = this.type === 'GRASS' ? 'lawngreen' : 'gray';
 		this.speed = 3 + index * 0.01;
-
 		this.vehicles = [];
+		this.trees = [];
+
 		if (this.type === 'ROAD') {
 			this._addVehicles();
+		}
+
+		if (this.type === 'GRASS' && index !== 0) {
+			const nTrees = Math.round(Math.random() * 3);
+			this._addTrees(nTrees);
 		}
 	}
 
@@ -23,6 +29,29 @@ class Lane {
 		vehicle.x = Math.random() * this.w;
 		vehicle.direction = this.direction;
 		this.vehicles.push(vehicle);
+	}
+
+	_addTrees(nTrees) {
+		const availablePositions = [ 0, 1, 2, 4, 5, 6 ];
+
+		for (let i = 0; i < nTrees; i++) {
+			const tree = new Tree(this.game);
+
+			const posIndex = Math.round(Math.random() * availablePositions.length);
+			const pos = availablePositions[posIndex];
+
+			availablePositions.slice(availablePositions, 1);
+
+			const { x, y } = calcCenter(
+				rect(pos * this.game.blockSize, this.y, this.game.blockSize, this.game.blockSize),
+				tree
+			);
+
+			tree.x = x;
+			tree.y = y;
+
+			this.trees.push(tree);
+		}
 	}
 
 	_type = (index) => {

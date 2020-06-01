@@ -15,8 +15,31 @@ class Player {
 		return this.dead ? 'black' : 'white';
 	}
 
+	_canMove(finalRectProps = {}) {
+		const finalRect = {
+			x: this.x,
+			y: this.y,
+			w: this.w,
+			h: this.h,
+			...finalRectProps
+		};
+
+		if (
+			this._updateQueue.length > 0 ||
+			this.dead ||
+			finalRect.x < 0 ||
+			finalRect > this.blockSize * 7 ||
+			finalRect.y < 0
+		)
+			return false;
+
+		const collidedWithObstacle = this.game.obstacles.find((obstacle) => collide(finalRect, obstacle));
+
+		return !collidedWithObstacle;
+	}
+
 	up() {
-		if (this._updateQueue.length > 0 || this.dead) return;
+		if (!this._canMove({ y: this.y + this.game.blockSize })) return;
 
 		Array(this._moveFrames)
 			.fill(() => (this.y += this.game.blockSize / this._moveFrames))
@@ -24,10 +47,7 @@ class Player {
 	}
 
 	down() {
-		if (this._updateQueue.length > 0 || this.dead) return;
-
-		const finalY = this.y - this.game.blockSize;
-		if (finalY < 0) return;
+		if (!this._canMove({ y: this.y - this.game.blockSize })) return;
 
 		Array(this._moveFrames)
 			.fill(() => (this.y -= this.game.blockSize / this._moveFrames))
@@ -35,10 +55,7 @@ class Player {
 	}
 
 	left() {
-		if (this._updateQueue.length > 0 || this.dead) return;
-
-		const finalX = this.x - this.game.blockSize;
-		if (finalX < 0) return;
+		if (!this._canMove({ x: this.x - this.game.blockSize })) return;
 
 		Array(this._moveFrames)
 			.fill(() => (this.x -= this.game.blockSize / this._moveFrames))
@@ -46,10 +63,7 @@ class Player {
 	}
 
 	right() {
-		if (this._updateQueue.length > 0 || this.dead) return;
-
-		const finalX = this.x + this.game.blockSize;
-		if (finalX > this.game.blockSize * 7) return;
+		if (!this._canMove({ x: this.x + this.game.blockSize })) return;
 
 		Array(this._moveFrames)
 			.fill(() => (this.x += this.game.blockSize / this._moveFrames))
