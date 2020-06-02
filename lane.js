@@ -18,7 +18,7 @@ class Lane {
 		}
 
 		if (this.type === 'GRASS' && index !== 0) {
-			const nTrees = Math.round(Math.random() * 3);
+			const nTrees = Math.round(Math.random() * 5);
 			this._addTrees(nTrees);
 		}
 	}

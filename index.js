@@ -6,6 +6,8 @@ class Game {
 		this.lives = 3;
 		this.checkpoint = 0;
 		this.paused = false;
+		this.score = 0;
+		this.highestY = 0;
 
 		window.addEventListener('resize', this.setupGameResolution.bind(this));
 
@@ -42,6 +44,7 @@ class Game {
 
 	setup() {
 		this.controls = new Controls();
+		this.hud = new Hud(this);
 		this.player = new Player(this);
 		this.player.w = this.playerSize;
 		this.player.h = this.playerSize;
@@ -53,10 +56,19 @@ class Game {
 		this.player.x = playerPos.x;
 		this.player.y = playerPos.y;
 
+		this.highestY = this.player.y;
+
 		this.update();
 	}
 
 	update() {
+		// Update score
+		if (this.player.y > this.highestY) {
+			const diff = this.player.y - this.highestY;
+			this.score += Math.round(diff * this.lives / 10);
+			this.highestY = this.player.y;
+		}
+
 		// focus camera on player block
 		const playerBlock = Math.floor(this.player.y / this.blockSize);
 		let blockToFocus = playerBlock - 2;
@@ -83,7 +95,7 @@ class Game {
 		}
 
 		// Collision with car! Player dies
-		if (this.lanes.find((lane) => !!lane.vehicles.find((v) => !!collide(v, this.player)))) {
+		if (!this.player.dead && this.lanes.find((lane) => !!lane.vehicles.find((v) => !!collide(v, this.player)))) {
 			this.player.die();
 			this.lives -= 1;
 
@@ -122,6 +134,8 @@ class Game {
 		});
 		this.camera.render(this.ctx, this.player);
 		this.lanes.forEach((lane) => lane.vehicles.forEach((v) => this.camera.render(this.ctx, v)));
+
+		this.hud.renderScore(this.ctx, this.score);
 
 		this.update();
 	}
