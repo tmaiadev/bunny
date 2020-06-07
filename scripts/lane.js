@@ -9,6 +9,7 @@ class Lane {
 		this.direction = index % 2 === 0 ? 'RIGHT' : 'LEFT';
 		this.type = this._type(index);
 		this.color = this.type === 'GRASS' ? 'lawngreen' : 'gray';
+		this.pattern = game.assets.get(this.type === 'GRASS' ? 'grass' : 'asphalt');
 		this.speed = 3 + index * 0.01;
 		this.vehicles = [];
 		this.trees = [];

@@ -10,9 +10,18 @@ class Game {
 		this.highestY = 0;
 
 		window.addEventListener('resize', this.setupGameResolution.bind(this));
-
 		this.setupGameResolution();
-		this.setup();
+
+		this.assets = new Assets();
+		this.assets.image('grass', 'images/grass.jpg');
+		this.assets.image('asphalt', 'images/asphalt.jpg');
+		this.assets.image('tree1', 'images/tree1.png');
+		this.assets.image('tree2', 'images/tree2.png');
+		this.assets.image('tree3', 'images/tree3.png');
+		this.assets.image('moto', 'images/moto.png');
+		this.assets.image('car', 'images/car.png');
+		this.assets.image('bus', 'images/bus.png');
+		this.assets.onLoaded(this.setup.bind(this));
 	}
 
 	get obstacles() {

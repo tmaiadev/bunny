@@ -24,24 +24,24 @@ class Vehicle {
 			CAR: {
 				w: 1,
 				h: 0.5,
-				color: 'blue'
+				texture: this.game.assets.get('car')
 			},
 			MOTO: {
 				w: 0.6,
 				h: 0.3,
-				color: 'red'
+				texture: this.game.assets.get('moto')
 			},
 			BUS: {
 				w: 2,
 				h: 0.6,
-				color: 'yellow'
+				texture: this.game.assets.get('bus')
 			}
 		};
 		const type = types[Math.round(Math.random() * (types.length - 1))];
-		const { w, h, color } = attrs[type];
+		const { w, h, color, texture } = attrs[type];
 		this.w = w * this.game.blockSize;
 		this.h = h * this.game.blockSize;
-		this.color = color;
+		this.texture = texture;
 
 		const { x, y } = calcCenter(
 			{

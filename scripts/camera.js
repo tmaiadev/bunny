@@ -39,10 +39,27 @@ class Camera {
 		}
 	}
 
-	render(ctx, { x, y, w, h, color }) {
+	render(ctx, { x, y, w, h, color, pattern, direction, texture }) {
 		if (!this.inView(x, y, w, h)) return;
 
-		ctx.fillStyle = color;
-		ctx.fillRect(x, this.h - h - y + this.y, w, h);
+		ctx.imageSmoothingEnabled = false;
+
+		if (texture) {
+			if (direction === 'LEFT') {
+				ctx.save();
+				ctx.scale(-1, 1);
+				ctx.drawImage(texture, x * -1, this.h - h - y + this.y, w * -1, h);
+				ctx.restore();
+			} else {
+				ctx.drawImage(texture, x, this.h - h - y + this.y, w, h);
+			}
+		} else if (pattern) {
+			for (let i = 0; i < 7; i++) {
+				ctx.drawImage(pattern, i * this.game.blockSize, this.h - h - y + this.y, this.game.blockSize, h);
+			}
+		} else {
+			ctx.fillStyle = color;
+			ctx.fillRect(x, this.h - h - y + this.y, w, h);
+		}
 	}
 }
