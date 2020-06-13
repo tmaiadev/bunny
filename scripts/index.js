@@ -21,6 +21,14 @@ class Game {
 		this.assets.image('moto', 'images/moto.png');
 		this.assets.image('car', 'images/car.png');
 		this.assets.image('bus', 'images/bus.png');
+		this.assets.image('bunny-idle-up', 'images/bunny-idle-up.png');
+		this.assets.image('bunny-idle-down', 'images/bunny-idle-down.png');
+		this.assets.image('bunny-idle-left', 'images/bunny-idle-left.png');
+		this.assets.image('bunny-idle-right', 'images/bunny-idle-right.png');
+		this.assets.image('bunny-jump-up', 'images/bunny-jump-up.png');
+		this.assets.image('bunny-jump-down', 'images/bunny-jump-down.png');
+		this.assets.image('bunny-jump-left', 'images/bunny-jump-left.png');
+		this.assets.image('bunny-jump-right', 'images/bunny-jump-right.png');
 		this.assets.onLoaded(this.setup.bind(this));
 	}
 
@@ -43,7 +51,6 @@ class Game {
 		this.screenWidth = 640;
 		this.screenHeight = this.screenWidth * aspectRatio;
 		this.blockSize = this.screenWidth / 7;
-		this.playerSize = this.blockSize * 0.5;
 
 		this.$canvas.width = this.screenWidth;
 		this.$canvas.height = this.screenHeight;
@@ -55,8 +62,6 @@ class Game {
 		this.controls = new Controls();
 		this.hud = new Hud(this);
 		this.player = new Player(this);
-		this.player.w = this.playerSize;
-		this.player.h = this.playerSize;
 
 		const nVisibleLanes = Math.ceil(this.screenHeight / this.blockSize);
 		this.lanes = this.genLanes(nVisibleLanes);
@@ -116,6 +121,7 @@ class Game {
 				this.player.x = x;
 				this.player.y = y;
 				this.player.dead = false;
+				this.player.state = 'idle';
 			}, 1000);
 		}
 
